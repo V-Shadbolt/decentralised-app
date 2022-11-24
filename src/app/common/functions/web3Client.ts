@@ -153,7 +153,7 @@ export const trySafeAppConnection = async callback => {
 };
 
 export const connectToWallet = async (connectOptions?) => {
-  let walletAddress = {domain: null, address: null};
+  let walletAccount = {domain: null, address: null};
   let wallets;
 
   try {
@@ -163,9 +163,10 @@ export const connectToWallet = async (connectOptions?) => {
       const unstoppableUser = wallets[0].label == 'Unstoppable'? true : false;
       walletProvider = new ethers.providers.Web3Provider(wallets[0].provider);
       web3 = new Web3(walletProvider);
-      walletAddress.domain = unstoppableUser? wallets[0].instance.user.sub : null;
-      walletAddress.address = wallets[0].accounts[0].address;
-      return walletAddress;
+      walletAddress = wallets[0].accounts[0].address;
+      walletAccount.address = walletAddress;
+      walletAccount.domain = unstoppableUser? wallets[0].instance.user.sub : null;
+      return walletAccount;
     }
   } catch (error) {
     console.log(error);
