@@ -20,6 +20,10 @@ export const ConnectionButton = ({ ...rest }) => {
   const [walletAccountAtom] = useRecoilState(walletAccount);
   const { handleConnectWallet } = useConnectionButton();
 
+  if (walletAccountAtom?.includes('.')){
+    console.log("IM A DOMAIN NAME HERE HERE HERE")
+  }
+
   return (
     <ResponsiveContext.Consumer>
       {size => (
@@ -35,7 +39,12 @@ export const ConnectionButton = ({ ...rest }) => {
             size={isSmall(size) ? 'small' : undefined}
             label={
               walletAccountAtom
-                ? 'Connected: ' +
+                ? 
+                walletAccountAtom.includes('.')
+                  ?
+                  'Connected: ' +
+                  walletAccountAtom
+                  : 'Connected: ' +
                   walletAccountAtom.substring(0, 6) +
                   '...' +
                   walletAccountAtom.substring(walletAccountAtom.length - 4)

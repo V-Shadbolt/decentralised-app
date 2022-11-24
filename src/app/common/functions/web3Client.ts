@@ -5,6 +5,7 @@ import Onboard from '@web3-onboard/core';
 import gnosisModule from '@web3-onboard/gnosis';
 import injectedModule from '@web3-onboard/injected-wallets';
 import walletConnectModule from '@web3-onboard/walletconnect';
+import uauthModule from '@web3-onboard/uauth'
 import polygonHandlerAbi from 'app/common/abis/polygonHandler.json';
 import {
   EEthereumAddresses,
@@ -50,6 +51,10 @@ const walletConnect = walletConnectModule({
 });
 const gnosis = gnosisModule();
 const coinbase = coinbaseWalletModule();
+const uauth = uauthModule({
+  clientID: process.env.REACT_APP_CLIENT_ID!,
+  redirectUri: process.env.REACT_APP_REDIRECT_URI!
+})
 
 const chains = [
   {
@@ -104,6 +109,7 @@ onboard.state.actions.setWalletModules([
   walletConnect,
   gnosis,
   coinbase,
+  uauth,
 ]);
 
 const permitOnlyTokenAddresses = [
@@ -153,9 +159,12 @@ export const connectToWallet = async (connectOptions?) => {
     wallets = await onboard.connectWallet(connectOptions);
 
     if (wallets[0]) {
+      const unstoppableUser = wallets.find(
+        provider => provider.label === 'Unstoppable'
+      )
       walletProvider = new ethers.providers.Web3Provider(wallets[0].provider);
       web3 = new Web3(walletProvider);
-      walletAddress = wallets[0].accounts[0].address;
+      walletAddress = unstoppableUser? unstoppableUser.instance.user.sub : wallets[0].accounts[0].address;
       return walletAddress;
     }
   } catch (error) {

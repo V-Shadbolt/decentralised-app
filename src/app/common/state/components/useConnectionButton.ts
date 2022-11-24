@@ -11,6 +11,7 @@ export const useConnectionButton = () => {
   const handleConnectWallet = async () => {
     const walletAddress = await connectToWallet();
     setWalletAccountAtom(walletAddress);
+    /*
     const userHash = CryptoJs.HmacSHA256(
       walletAddress,
       process.env.REACT_APP_INTERCOM_SECRET_KEY,
@@ -18,6 +19,7 @@ export const useConnectionButton = () => {
     var userHashInHex = CryptoJs.enc.Hex.stringify(userHash);
     update({ userId: walletAddress, userHash: userHashInHex });
     trackEvent('connected-wallet');
+    */
   };
 
   return {
