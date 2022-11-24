@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Grommet, ResponsiveContext, Button } from 'grommet';
 import { isSmall, theme } from 'app/modernUI/theme';
 import { useConnectionButton } from 'app/common/state/components';
-import { walletAccount, mode } from 'app/common/state/atoms';
+import { walletAccount, walletDomain, mode } from 'app/common/state/atoms';
 
 const StyledButton = styled(Button)`
   ${props =>
@@ -18,11 +18,8 @@ const StyledButton = styled(Button)`
 export const ConnectionButton = ({ ...rest }) => {
   const [modeAtom] = useRecoilState(mode);
   const [walletAccountAtom] = useRecoilState(walletAccount);
+  const [walletDomainAtom] = useRecoilState(walletDomain);
   const { handleConnectWallet } = useConnectionButton();
-
-  if (walletAccountAtom?.includes('.')){
-    console.log("IM A DOMAIN NAME HERE HERE HERE")
-  }
 
   return (
     <ResponsiveContext.Consumer>
@@ -40,10 +37,10 @@ export const ConnectionButton = ({ ...rest }) => {
             label={
               walletAccountAtom
                 ? 
-                walletAccountAtom.includes('.')
+                walletDomainAtom != null
                   ?
                   'Connected: ' +
-                  walletAccountAtom
+                  walletDomainAtom
                   : 'Connected: ' +
                   walletAccountAtom.substring(0, 6) +
                   '...' +

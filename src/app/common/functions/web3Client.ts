@@ -153,18 +153,18 @@ export const trySafeAppConnection = async callback => {
 };
 
 export const connectToWallet = async (connectOptions?) => {
+  let walletAddress = {domain: null, address: null};
   let wallets;
 
   try {
     wallets = await onboard.connectWallet(connectOptions);
 
     if (wallets[0]) {
-      const unstoppableUser = wallets.find(
-        provider => provider.label === 'Unstoppable'
-      )
+      const unstoppableUser = wallets[0].label == 'Unstoppable'? true : false;
       walletProvider = new ethers.providers.Web3Provider(wallets[0].provider);
       web3 = new Web3(walletProvider);
-      walletAddress = unstoppableUser? unstoppableUser.instance.user.sub : wallets[0].accounts[0].address;
+      walletAddress.domain = unstoppableUser? wallets[0].instance.user.sub : null;
+      walletAddress.address = wallets[0].accounts[0].address;
       return walletAddress;
     }
   } catch (error) {
